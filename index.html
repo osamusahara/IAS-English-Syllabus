@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>English-Taught Courses | Faculty of Integrated Arts and Sciences, Tokushima University</title>
+<meta name="description" content="Searchable guide to English-language course and syllabus information for the Faculty of Integrated Arts and Sciences, Tokushima University, 2025–2026.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* 言語切替ボタンの追加スタイル */
+  .lang-switcher {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .lang-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.2s;
+  }
+  .lang-btn.active {
+    background: #fff;
+    color: #003b70;
+    border-color: #fff;
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <!-- 言語切り替えボタン (初期表示: 英語 active) -->
+    <div class="lang-switcher">
+      <button type="button" class="lang-btn active" id="btn-en" onclick="switchLanguage('en')">English</button>
+      <button type="button" class="lang-btn" id="btn-ja" onclick="switchLanguage('ja')">日本語</button>
+    </div>
+
+    <div class="eyebrow" id="txt-eyebrow">TOKUSHIMA UNIVERSITY · FACULTY OF INTEGRATED ARTS AND SCIENCES</div>
+    <h1 id="txt-title">English-Taught Courses</h1>
+    <p class="lead" id="txt-lead">Explore courses offered in English and browse their syllabus information for 2025–2026.</p>
+    <div class="hero-meta"><span id="courseCount">—</span> <span id="txt-unit">courses</span> · <span>2025–2026</span></div>
+  </div>
+</header>
+<main class="wrap">
+  <section class="controls" aria-label="Course search and filters">
+    <div class="search">
+      <label for="q" id="txt-search-label">Search courses</label>
+      <input id="q" type="search" placeholder="Course title, instructor, keyword, numbering…" autocomplete="off">
+    </div>
+    <div class="filters">
+      <label><span id="txt-lbl-year">Year</span><select id="year"><option value="" id="opt-year-all">All years</option><option>2026</option><option>2025</option></select></label>
+      <label><span id="txt-lbl-semester">Semester</span><select id="semester"><option value="" id="opt-sem-all">All semesters</option><option value="First semester" id="opt-sem-1">First semester</option><option value="Second semester" id="opt-sem-2">Second semester</option></select></label>
+      <label><span id="txt-lbl-format">Format</span><select id="format"><option value="" id="opt-fmt-all">All formats</option><option value="Lecture" id="opt-fmt-1">Lecture</option><option value="Seminar" id="opt-fmt-2">Seminar</option><option value="Media-based (online) class" id="opt-fmt-3">Media-based (online) class</option></select></label>
+      <label><span id="txt-lbl-type">Type</span><select id="type"><option value="" id="opt-typ-all">Required / elective</option><option value="Required" id="opt-typ-1">Required</option><option value="Elective" id="opt-typ-2">Elective</option></select></label>
+    </div>
+    <div class="toolbar"><span id="resultCount"></span><button id="clear" type="button">Clear filters</button></div>
+  </section>
+  <section id="results" class="grid" aria-live="polite"></section>
+  <div id="empty" class="empty" hidden><h2 id="txt-empty-title">No courses found</h2><p id="txt-empty-desc">Try a broader search or clear one of the filters.</p></div>
+</main>
+<dialog id="detail"><button class="close" aria-label="Close">×</button><div id="detailContent"></div></dialog>
+<footer>
+  <div class="wrap">
+    <p><strong id="txt-footer-dept">Faculty of Integrated Arts and Sciences, Tokushima University</strong></p>
+    <p class="muted" id="txt-footer-note">Course information compiled from the Faculty's English syllabus data for 2025–2026. Please confirm the official university syllabus before registration.</p>
+  </div>
+</footer>
+<script src="courses.js"></script>
+<script src="app.js"></script>
+<script>
+  // 言語切替処理（デフォルト：英語）
+  function switchLanguage(lang) {
+    document.getElementById("btn-en").classList.toggle("active", lang === 'en');
+    document.getElementById("btn-ja").classList.toggle("active", lang === 'ja');
+    document.documentElement.lang = lang;
+
+    if (lang === 'ja') {
+      document.getElementById("txt-eyebrow").textContent = "徳島大学 総合科学部";
+      document.getElementById("txt-title").textContent = "英語開講科目 シラバス";
+      document.getElementById("txt-lead").textContent = "2025–2026年度に提供される英語開講科目とシラバス情報を検索・閲覧できます。";
+      document.getElementById("txt-unit").textContent = "科目";
+      document.getElementById("txt-search-label").textContent = "科目を検索";
+      document.getElementById("q").placeholder = "科目名、担当教員、キーワード、ナンバリング…";
+      document.getElementById("txt-lbl-year").textContent = "開講年度";
+      document.getElementById("opt-year-all").textContent = "すべての年度";
+      document.getElementById("txt-lbl-semester").textContent = "開講学期";
+      document.getElementById("opt-sem-all").textContent = "すべての学期";
+      document.getElementById("opt-sem-1").textContent = "前期";
+      document.getElementById("opt-sem-2").textContent = "後期";
+      document.getElementById("txt-lbl-format").textContent = "授業形態";
+      document.getElementById("opt-fmt-all").textContent = "すべての形態";
+      document.getElementById("opt-fmt-1").textContent = "講義";
+      document.getElementById("opt-fmt-2").textContent = "演習";
+      document.getElementById("opt-fmt-3").textContent = "遠隔授業（オンライン）";
+      document.getElementById("txt-lbl-type").textContent = "必修・選択";
+      document.getElementById("opt-typ-all").textContent = "必修 / 選択";
+      document.getElementById("opt-typ-1").textContent = "必修";
+      document.getElementById("opt-typ-2").textContent = "選択";
+      document.getElementById("clear").textContent = "フィルターをクリア";
+      document.getElementById("txt-empty-title").textContent = "該当する科目がありません";
+      document.getElementById("txt-empty-desc").textContent = "検索条件を緩めるか、フィルターを解除してください。";
+      document.getElementById("txt-footer-dept").textContent = "徳島大学 総合科学部";
+      document.getElementById("txt-footer-note").textContent = "本情報は2025–2026年度の総合科学部英語シラバスデータより作成されています。履修登録の際は必ず大学の公式シラバスをご確認ください。";
+    } else {
+      document.getElementById("txt-eyebrow").textContent = "TOKUSHIMA UNIVERSITY · FACULTY OF INTEGRATED ARTS AND SCIENCES";
+      document.getElementById("txt-title").textContent = "English-Taught Courses";
+      document.getElementById("txt-lead").textContent = "Explore courses offered in English and browse their syllabus information for 2025–2026.";
+      document.getElementById("txt-unit").textContent = "courses";
+      document.getElementById("txt-search-label").textContent = "Search courses";
+      document.getElementById("q").placeholder = "Course title, instructor, keyword, numbering…";
+      document.getElementById("txt-lbl-year").textContent = "Year";
+      document.getElementById("opt-year-all").textContent = "All years";
+      document.getElementById("txt-lbl-semester").textContent = "Semester";
+      document.getElementById("opt-sem-all").textContent = "All semesters";
+      document.getElementById("opt-sem-1").textContent = "First semester";
+      document.getElementById("opt-sem-2").textContent = "Second semester";
+      document.getElementById("txt-lbl-format").textContent = "Format";
+      document.getElementById("opt-fmt-all").textContent = "All formats";
+      document.getElementById("opt-fmt-1").textContent = "Lecture";
+      document.getElementById("opt-fmt-2").textContent = "Seminar";
+      document.getElementById("opt-fmt-3").textContent = "Media-based (online) class";
+      document.getElementById("txt-lbl-type").textContent = "Type";
+      document.getElementById("opt-typ-all").textContent = "Required / elective";
+      document.getElementById("opt-typ-1").textContent = "Required";
+      document.getElementById("opt-typ-2").textContent = "Elective";
+      document.getElementById("clear").textContent = "Clear filters";
+      document.getElementById("txt-empty-title").textContent = "No courses found";
+      document.getElementById("txt-empty-desc").textContent = "Try a broader search or clear one of the filters.";
+      document.getElementById("txt-footer-dept").textContent = "Faculty of Integrated Arts and Sciences, Tokushima University";
+      document.getElementById("txt-footer-note").textContent = "Course information compiled from the Faculty's English syllabus data for 2025–2026. Please confirm the official university syllabus before registration.";
+    }
+  }
+</script>
+</body>
+</html>

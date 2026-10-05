@@ -12,7 +12,6 @@ function matches(c) {
         const hay = norm([c['英文科目名'], c['科目名'], c['英文教員名'], c['教員名'], c['キーワード'], c['ナンバリング'], c['科目分野名']].join(' '));
         if (!hay.includes(q)) return false;
     }
-    // 年度(year)のフィルターは削除しました
     if ($('#semester').value && c['開講学期'] !== $('#semester').value) return false;
     if ($('#format').value && c['授業形態 (Class format)'] !== $('#format').value) return false;
     if ($('#type').value && c['選必区分 (Required/elective)'] !== $('#type').value) return false;
@@ -53,7 +52,7 @@ function render() {
     if (sortVal === 'day-asc') {
         arr.sort((a, b) => {
             const getVal = (str) => {
-                if (!str) return 99; // 空欄などは最後尾
+                if (!str) return 99; // 空欄などは最後尾へ
                 const match = str.match(/^(Mon|Tue|Wed|Thu|Fri|Intensive|Practicum|Individually)/);
                 return match ? dayOrder[match[1]] : 99;
             };
@@ -106,7 +105,6 @@ function openDetail(c) {
     $('#detail').showModal();
 }
 
-// イベントリスナーの登録先から 'year' を外し、'sort-day' を追加
 ['q', 'semester', 'format', 'type', 'sort-day'].forEach(id => {
     const el = $('#' + id);
     if (el) el.addEventListener(id === 'q' ? 'input' : 'change', render);
@@ -116,7 +114,6 @@ $('#clear').onclick = () => {
     ['q', 'semester', 'format', 'type'].forEach(id => {
         if ($('#' + id)) $('#' + id).value = '';
     });
-    // ソート順はクリア時に「標準(default)」へ戻す
     if ($('#sort-day')) $('#sort-day').value = 'default';
     render();
 };

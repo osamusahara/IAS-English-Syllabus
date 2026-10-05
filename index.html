@@ -53,9 +53,17 @@
     </div>
     <div class="filters">
       <label><span id="txt-lbl-semester">Semester</span><select id="semester"><option value="" id="opt-sem-all">All semesters</option><option value="First semester" id="opt-sem-1">First semester</option><option value="Second semester" id="opt-sem-2">Second semester</option></select></label>
+      <label><span id="txt-lbl-day">Day</span><select id="day">
+        <option value="" id="opt-day-all">All days</option>
+        <option value="Mon" id="opt-day-mon">Monday</option>
+        <option value="Tue" id="opt-day-tue">Tuesday</option>
+        <option value="Wed" id="opt-day-wed">Wednesday</option>
+        <option value="Thu" id="opt-day-thu">Thursday</option>
+        <option value="Fri" id="opt-day-fri">Friday</option>
+        <option value="Intensive" id="opt-day-int">Intensive</option>
+      </select></label>
       <label><span id="txt-lbl-format">Format</span><select id="format"><option value="" id="opt-fmt-all">All formats</option><option value="Lecture" id="opt-fmt-1">Lecture</option><option value="Seminar" id="opt-fmt-2">Seminar</option><option value="Media-based (online) class" id="opt-fmt-3">Media-based (online) class</option></select></label>
       <label><span id="txt-lbl-type">Type</span><select id="type"><option value="" id="opt-typ-all">Required / elective</option><option value="Required" id="opt-typ-1">Required</option><option value="Elective" id="opt-typ-2">Elective</option></select></label>
-      <label><span id="txt-lbl-sort">Sort by</span><select id="sort-day"><option value="default" id="opt-sort-def">Default</option><option value="day-asc" id="opt-sort-day">Day of Week (Mon-Fri)</option></select></label>
     </div>
     <div class="toolbar"><span id="resultCount"></span><button id="clear" type="button">Clear filters</button></div>
   </section>
@@ -91,6 +99,16 @@
       document.getElementById("opt-sem-all").textContent = "すべての学期";
       document.getElementById("opt-sem-1").textContent = "前期";
       document.getElementById("opt-sem-2").textContent = "後期";
+      
+      document.getElementById("txt-lbl-day").textContent = "曜日";
+      document.getElementById("opt-day-all").textContent = "すべての曜日";
+      document.getElementById("opt-day-mon").textContent = "月曜日";
+      document.getElementById("opt-day-tue").textContent = "火曜日";
+      document.getElementById("opt-day-wed").textContent = "水曜日";
+      document.getElementById("opt-day-thu").textContent = "木曜日";
+      document.getElementById("opt-day-fri").textContent = "金曜日";
+      document.getElementById("opt-day-int").textContent = "集中講義など";
+
       document.getElementById("txt-lbl-format").textContent = "授業形態";
       document.getElementById("opt-fmt-all").textContent = "すべての形態";
       document.getElementById("opt-fmt-1").textContent = "講義";
@@ -100,9 +118,6 @@
       document.getElementById("opt-typ-all").textContent = "必修 / 選択";
       document.getElementById("opt-typ-1").textContent = "必修";
       document.getElementById("opt-typ-2").textContent = "選択";
-      document.getElementById("txt-lbl-sort").textContent = "並び替え";
-      document.getElementById("opt-sort-def").textContent = "標準";
-      document.getElementById("opt-sort-day").textContent = "曜日順 (月〜金)";
       document.getElementById("clear").textContent = "フィルターをクリア";
       document.getElementById("txt-empty-title").textContent = "該当する科目がありません";
       document.getElementById("txt-empty-desc").textContent = "検索条件を緩めるか、フィルターを解除してください。";
@@ -120,6 +135,16 @@
       document.getElementById("opt-sem-all").textContent = "All semesters";
       document.getElementById("opt-sem-1").textContent = "First semester";
       document.getElementById("opt-sem-2").textContent = "Second semester";
+
+      document.getElementById("txt-lbl-day").textContent = "Day";
+      document.getElementById("opt-day-all").textContent = "All days";
+      document.getElementById("opt-day-mon").textContent = "Monday";
+      document.getElementById("opt-day-tue").textContent = "Tuesday";
+      document.getElementById("opt-day-wed").textContent = "Wednesday";
+      document.getElementById("opt-day-thu").textContent = "Thursday";
+      document.getElementById("opt-day-fri").textContent = "Friday";
+      document.getElementById("opt-day-int").textContent = "Intensive";
+
       document.getElementById("txt-lbl-format").textContent = "Format";
       document.getElementById("opt-fmt-all").textContent = "All formats";
       document.getElementById("opt-fmt-1").textContent = "Lecture";
@@ -129,9 +154,6 @@
       document.getElementById("opt-typ-all").textContent = "Required / elective";
       document.getElementById("opt-typ-1").textContent = "Required";
       document.getElementById("opt-typ-2").textContent = "Elective";
-      document.getElementById("txt-lbl-sort").textContent = "Sort by";
-      document.getElementById("opt-sort-def").textContent = "Default";
-      document.getElementById("opt-sort-day").textContent = "Day of Week (Mon-Fri)";
       document.getElementById("clear").textContent = "Clear filters";
       document.getElementById("txt-empty-title").textContent = "No courses found";
       document.getElementById("txt-empty-desc").textContent = "Try a broader search or clear one of the filters.";
@@ -139,7 +161,6 @@
       document.getElementById("txt-footer-note").textContent = "Course information compiled from the Faculty's syllabus data. Please confirm the official university syllabus before registration.";
     }
     
-    // カード内のテキストを新しい言語で再描画
     if (typeof render === 'function') render();
   }
 </script>

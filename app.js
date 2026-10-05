@@ -2,6 +2,12 @@ const C = window.COURSES || [];
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 
+// 日本語表示では、同じ時間割コードの日本語版シラバスの値を使う
+function F(c, key) {
+    if (window.currentLang === 'ja' && c.ja && key in c.ja) return c.ja[key];
+    return c[key];
+}
+
 function norm(s) {
     return String(s || '').toLowerCase().normalize('NFKC');
 }
@@ -9,7 +15,8 @@ function norm(s) {
 function matches(c) {
     const q = norm($('#q').value);
     if (q) {
-        const hay = norm([c['英文科目名'], c['科目名'], c['英文教員名'], c['教員名'], c['キーワード'], c['ナンバリング'], c['科目分野名']].join(' '));
+        const ja = c.ja || {};
+        const hay = norm([c['英文科目名'], c['科目名'], c['英文教員名'], c['教員名'], c['キーワード'], ja['キーワード'], c['ナンバリング (Numbering)'], c['科目分野名'], ja['科目分野名']].join(' '));
         if (!hay.includes(q)) return false;
     }
     if ($('#semester').value && c['開講学期'] !== $('#semester').value) return false;
@@ -66,14 +73,14 @@ function card(c, i) {
     return `<article class="card" tabindex="0" data-i="${i}">
         <div class="badges">
             <span class="badge">${esc(c['開講年度'])}</span>
-            <span class="badge">${esc(loc(c['開講学期']))}</span>
-            ${c['選必区分 (Required/elective)'] ? `<span class="badge">${esc(loc(c['選必区分 (Required/elective)']))}</span>` : ''}
+            ${F(c, '開講学期') ? `<span class="badge">${esc(loc(F(c, '開講学期')))}</span>` : ''}
+            ${F(c, '選必区分 (Required/elective)') ? `<span class="badge">${esc(loc(F(c, '選必区分 (Required/elective)')))}</span>` : ''}
         </div>
         <h2>${esc(title)}</h2>
         <div class="jp">${esc(sub || '')}</div>
         <div class="teacher">${lblInstr}<br><strong>${esc(teacher || '—')}</strong></div>
         <div class="info">
-            <span>${esc(locSchedule(c['開講曜日時限']))}</span>
+            <span>${esc(isJa && c.ja ? (c.ja['開講曜日時限'] || '未定') : locSchedule(c['開講曜日時限']))}</span>
             ${c['単位'] ? `<span>· ${esc(c['単位'])} ${lblCred}</span>` : ''}
         </div>
     </article>`;
@@ -81,6 +88,7 @@ function card(c, i) {
 
 function render() {
     let arr = C.map((c, i) => ({ c, i })).filter(x => matches(x.c));
+    $('#courseCount').textContent = C.length;
 
     $('#resultCount').textContent = window.currentLang === 'ja' 
         ? `${C.length}件中 ${arr.length}件を表示`
@@ -118,6 +126,7 @@ function openDetail(c) {
     const lblTarget = isJa ? '対象クラス' : 'Target';
 
     const sections = isJa ? [
+        ['キーワード', 'キーワード'],
         ['授業の目的・到達目標', '授業の目的・到達目標'],
         ['授業の概要', '授業の概要 (Course outline)'],
         ['授業の計画', '授業の計画 (Course plan)'],
@@ -127,6 +136,7 @@ function openDetail(c) {
         ['教科書・参考書に関する補足', '教科書・参考書に関する補足 (Notes on textbooks/references)'],
         ['オフィスアワー・その他', 'オフィスアワー・その他']
     ] : [
+        ['Keywords', 'キーワード'],
         ['Course objectives & learning outcomes', '授業の目的・到達目標'],
         ['Course outline', '授業の概要 (Course outline)'],
         ['Course plan', '授業の計画 (Course plan)'],
@@ -144,15 +154,15 @@ function openDetail(c) {
     $('#detailContent').innerHTML = `<div class="detail">
         <div class="badges">
             <span class="badge">${esc(c['開講年度'])}</span>
-            <span class="badge">${esc(loc(c['開講学期']))}</span>
-            ${c['授業形態 (Class format)'] ? `<span class="badge">${esc(loc(c['授業形態 (Class format)']))}</span>` : ''}
+            ${F(c, '開講学期') ? `<span class="badge">${esc(loc(F(c, '開講学期')))}</span>` : ''}
+            ${F(c, '授業形態 (Class format)') ? `<span class="badge">${esc(loc(F(c, '授業形態 (Class format)')))}</span>` : ''}
         </div>
         <h1>${esc(title)}</h1>
         <div class="subtitle">${esc(sub || '')}</div>
         <div class="detail-grid">
-            ${[[lblInstr, teacher], [lblSched, locSchedule(c['開講曜日時限'])], [lblCred, c['単位']], [lblNum, c['ナンバリング']], [lblType, loc(c['選必区分 (Required/elective)'])], [lblTarget, c['対象クラス']]].map(([a, b]) => `<div class="kv"><small>${a}</small>${esc(b || '—')}</div>`).join('')}
+            ${[[lblInstr, teacher], [lblSched, isJa && c.ja ? c.ja['開講曜日時限'] : locSchedule(c['開講曜日時限'])], [lblCred, c['単位']], [lblNum, F(c, 'ナンバリング (Numbering)')], [lblType, loc(F(c, '選必区分 (Required/elective)'))], [lblTarget, F(c, '対象クラス')]].map(([a, b]) => `<div class="kv"><small>${a}</small>${esc(b || '—')}</div>`).join('')}
         </div>
-        ${sections.filter(x => c[x[1]]).map(x => `<section class="section"><h3>${x[0]}</h3><p>${val(c[x[1]])}</p></section>`).join('')}
+        ${sections.filter(x => F(c, x[1])).map(x => `<section class="section"><h3>${x[0]}</h3><p>${val(F(c, x[1]))}</p></section>`).join('')}
         <section class="section">
             <h3>${lblLinks}</h3>
             <div class="links">

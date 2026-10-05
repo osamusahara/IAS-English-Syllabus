@@ -52,11 +52,9 @@
       <input id="q" type="search" placeholder="Course title, instructor, keyword, numbering…" autocomplete="off">
     </div>
     <div class="filters">
-      <!-- 年度の選択肢を削除。裏側で2025/2026両方を対象にします -->
       <label><span id="txt-lbl-semester">Semester</span><select id="semester"><option value="" id="opt-sem-all">All semesters</option><option value="First semester" id="opt-sem-1">First semester</option><option value="Second semester" id="opt-sem-2">Second semester</option></select></label>
       <label><span id="txt-lbl-format">Format</span><select id="format"><option value="" id="opt-fmt-all">All formats</option><option value="Lecture" id="opt-fmt-1">Lecture</option><option value="Seminar" id="opt-fmt-2">Seminar</option><option value="Media-based (online) class" id="opt-fmt-3">Media-based (online) class</option></select></label>
       <label><span id="txt-lbl-type">Type</span><select id="type"><option value="" id="opt-typ-all">Required / elective</option><option value="Required" id="opt-typ-1">Required</option><option value="Elective" id="opt-typ-2">Elective</option></select></label>
-      <!-- 曜日ソートのドロップダウンを追加 -->
       <label><span id="txt-lbl-sort">Sort by</span><select id="sort-day"><option value="default" id="opt-sort-def">Default</option><option value="day-asc" id="opt-sort-day">Day of Week (Mon-Fri)</option></select></label>
     </div>
     <div class="toolbar"><span id="resultCount"></span><button id="clear" type="button">Clear filters</button></div>
